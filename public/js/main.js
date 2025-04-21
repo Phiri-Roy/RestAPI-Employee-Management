@@ -236,3 +236,40 @@ window.addEventListener('click', (e) => {
 
 // Initialize app
 checkAuth();
+
+// Signup form and toggle logic
+const signupForm = document.getElementById('signupForm');
+const showSignupBtn = document.getElementById('showSignupBtn');
+const showLoginBtn = document.getElementById('showLoginBtn');
+
+showSignupBtn.addEventListener('click', () => {
+    loginForm.classList.add('hidden');
+    signupForm.classList.remove('hidden');
+    modalTitle.textContent = 'Sign Up';
+});
+
+showLoginBtn.addEventListener('click', () => {
+    signupForm.classList.add('hidden');
+    loginForm.classList.remove('hidden');
+    modalTitle.textContent = 'Login';
+});
+
+signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+        const formData = new FormData(signupForm);
+        const signupData = {
+            username: formData.get('username'),
+            email: formData.get('email'),
+            password: formData.get('password')
+        };
+
+        const result = await apiCall('/signup', 'POST', signupData);
+        token = result.token;
+        localStorage.setItem('token', token);
+        checkAuth();
+        showToast('Signup successful');
+    } catch (error) {
+        console.error('Signup error:', error);
+    }
+});
