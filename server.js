@@ -11,7 +11,10 @@ dotenv.config();
 // Create Express app
 const app = express();
 
+const morgan = require('morgan');
+
 // Middleware
+app.use(morgan('dev'));
 app.use(cors({
     origin: 'http://localhost:8000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -26,11 +29,25 @@ app.use(express.static('public'));
  */
 console.log('MongoDB connection placeholder - please configure your MongoDB connection here');
 
+const userRoutes = require('./routes/userRoutes');
+
 // Routes
 app.use('/api', employeeRoutes);
+app.use('/api', userRoutes);
 
 // Serve static files
 app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+const apiPrefix = '/api';
+
+// Catch-all route to serve index.html for SPA routing, excluding API routes
+// Remove duplicate declaration of apiPrefix
+app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path === '/favicon.ico') {
+        return next();
+    }
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
@@ -42,6 +59,51 @@ app.use((err, req, res, next) => {
         message: 'Something went wrong!',
         error: process.env.NODE_ENV === 'development' ? err.message : {}
     });
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception thrown:', err);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception thrown:', err);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception thrown:', err);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception thrown:', err);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception thrown:', err);
+    process.exit(1);
 });
 
 // Start server
